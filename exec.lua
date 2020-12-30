@@ -25,6 +25,7 @@ function execExit(output, args)
 	b.Type.Readonly = true
 	micro.CurPane():HSplitIndex(b, true)
 	execPane = b
+	micro.InfoBar():Message("")
 end
 
 function execMake(bp, args)
@@ -35,13 +36,17 @@ function execLine(bp, args)
 	local c = bp.Cursor
 	local cmd = bp.Buf:Line(c.Y)
 	local cmdargs = {}
-	
-	if #cmd == 0 then
-		micro.InfoBar():Error("cannot exec empty line")
+	local cols = {}
+
+	if #args > 0 then
+		cols = args
+	elseif #cmd > 0 then
+		cols = strings.Split(cmd, " ")
+	else
+		micro.InfoBar():Error("neither arguments specified nor commands in current line")
 		return
 	end
 
-	local cols = strings.Split(cmd, " ")
 	cmd = cols[1]
 	for i = 2, #cols do
 		buffer.Log("arg: "..cols[i])
@@ -53,11 +58,13 @@ end
 function jumpToFile(bp, args)
 	local c = bp.Cursor
 	local line = bp.Buf:Line(c.Y)
+	line = string.sub(line, c.X+1)
+	micro.Log("jump to "..line)
 	local cols = strings.Split(line, ":")
 	local fname = cols[1]
 
 	if #fname == 0 then
-		micro.InfoBar():Error("no filename in current line")
+		micro.InfoBar():Error("no filename at current pos")
 		return
 	end
 
@@ -71,5 +78,6 @@ function jumpToFile(bp, args)
 		fname = fname .. ":" .. cols[2]
 	end
 
+	micro.InfoBar():Message(fname)
 	bp:HandleCommand("tab "..fname)
 end
