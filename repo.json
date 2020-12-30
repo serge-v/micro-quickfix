@@ -1,0 +1,15 @@
+[{
+  "Name": "exec",
+  "Description": "Plugin provides basic make and jump to error functionality",
+  "Tags": ["exec"],
+  "Website": "https://github.com/serve-v/exec",
+  "Versions": [
+    {
+      "Version": "2.0.0",
+      "Url": "https://github.com/serge-v/exec/archive/v2.0.0.zip",
+      "Require": {
+        "micro": ">=2.0.0-1"
+      }
+    }
+  ]
+}]
