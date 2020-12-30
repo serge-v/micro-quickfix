@@ -28,8 +28,7 @@ function execExit(output, args)
 end
 
 function execMake(bp, args)
-	local cmdargs = {}
-	shell.JobSpawn("make", cmdargs, nil, execErr, execExit, bp)
+	shell.JobSpawn("make", args, nil, execErr, execExit, bp)
 end
 
 function execLine(bp, args)
