@@ -1,19 +1,20 @@
 # exec plugin for micro editor
 
+Provides run make and jump to the error functionality.
+
 ## Commands
 
 ### make
 
-Executes make. Opens scratch buffer with a list of errors.
+Executes make. Captures the output.
 
 ### execline
 
-Executes current line. Opens scratch buffer with a list of errors.
+Executes current line. Captures the output.
 
 ### jump
 
-Jumps to the file under cursor.
-
+Jumps to the file under cursor. On the next execution jumps back to the output pane.
 
 ## Example bindings.json
 
