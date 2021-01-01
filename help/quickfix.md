@@ -1,0 +1,37 @@
+# Quickfix plugin
+
+Executes external command and shows the command output in qfix pane.
+qfix pane allows to jump to the file location. 
+
+Commands:
+
+fmake [target]
+
+    Executes make command.
+
+fexec [args]
+
+    If args is not empty executes the arguments.
+    Otherwise executes the current line.
+
+fjump
+
+    Jumps between qfix pane and file locations.
+
+## Example bindings
+
+Jump to the file and back to qfix pane:
+
+	"F3": "command:fjump"
+
+Run make:
+
+	"F8": "command:fmake"
+
+Exec current line:
+
+	"F9": "command:fexec"
+
+Grep for word under cursor:
+
+	"Alt-i": "command:fexec grep {w} *.go"

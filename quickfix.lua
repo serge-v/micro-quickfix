@@ -9,31 +9,26 @@ local regexp = import("regexp")
 local os = import("os")
 
 function init()
-	config.MakeCommand("make", execMake, config.NoComplete)
-	config.MakeCommand("execline", execLine, config.NoComplete)
-	config.MakeCommand("jump", jumpToFile, config.NoComplete)
-	config.AddRuntimeFile("exec", config.RTHelp, "help/exec.md")
+	config.MakeCommand("fmake", execMake, config.NoComplete)
+	config.MakeCommand("fexec", execLine, config.NoComplete)
+	config.MakeCommand("fjump", jumpToFile, config.NoComplete)
+	config.AddRuntimeFile("quickfix", config.RTHelp, "help/quickfix.md")
 end
 
---function execErr(err)
---	micro.Log("execline err: "..err)
---	micro.InfoBar():Error("execline error: "..err)
---end
-
-local execPane = nil
+local qfixPane = nil
 local tab = nil
 local active = 0
 
 function execExit(output, args)
-	if execPane ~= nil then
-		execPane:Quit()
+	if qfixPane ~= nil then
+		qfixPane:Quit()
 	end
 
-	local b = buffer.NewBuffer(output, "exec")
+	local b = buffer.NewBuffer(output, "qfix")
 	b.Type.Scratch = true
 	b.Type.Readonly = true
 	micro.CurPane():HSplitIndex(b, true)
-	execPane = micro.CurPane()
+	qfixPane = micro.CurPane()
 	tab = micro.CurTab()
 	local tabs = micro.Tabs()
 	active = tabs:Active()
@@ -47,9 +42,9 @@ function execMake(bp, args)
 	if p ~= nil then
 		name = p:Name()
 	end
-	if name == "exec" then
-		execPane:Quit()
-		execPane = nil
+	if name == "qfix" then
+		qfixPane:Quit()
+		qfixPane = nil
 		return
 	end
 
@@ -59,7 +54,7 @@ end
 function execCurrentLine(bp)
 	local c = bp.Cursor
 	local cmd = bp.Buf:Line(c.Y)
-	micro.Log("execline: "..cmd)
+	micro.Log("fexec: "..cmd)
 	if #cmd == 0 then
 		micro.InfoBar():Error("current line is empty")
 		return
@@ -71,17 +66,17 @@ function execArgs(bp, args)
 	local cmd = ""
 	cmd = strings.Join(args, " ")
 
-	if strings.Contains("{w}") then
+	if strings.Contains(cmd, "{w}") then
 		local c = bp.Cursor
 		local sel = ""
 		if not c:HasSelection() then
 			c:SelectWord()
 		end
-		sel = c:GetSelection()
+		sel = c:GetSelecion()
 		cmd = strings.Replace(cmd, "{w}", sel, 1)
 	end
 
-	micro.Log("execline: "..cmd)
+	micro.Log("fexec: "..cmd)
 	shell.JobStart(cmd, nil, nil, execExit, bp)
 end
 
@@ -91,9 +86,9 @@ function execLine(bp, args)
 	if p ~= nil then
 		name = p:Name()
 	end
-	if name == "exec" then
-		execPane:Quit()
-		execPane = nil
+	if name == "qfix" then
+		qfixPane:Quit()
+		qfixPane = nil
 		return
 	end
 
@@ -110,14 +105,14 @@ function jumpToFile(bp, args)
 	if p ~= nil then
 		name = p:Name()
 	end
-	if name ~= "exec" then
-		if execPane ~= nil then
-			execPane:SetActive(false)
+	if name ~= "qfix" then
+		if qfixPane ~= nil then
+			qfixPane:SetActive(false)
 			tab:SetActive(1)
 			local tabs = micro.Tabs()
 			tabs:SetActive(active)
 		else
-			micro.InfoBar():Error("use execline command to execute current line")
+			micro.InfoBar():Error("use fexec command to execute current line")
 		end
 		return
 	end
@@ -155,8 +150,8 @@ function jumpToFile(bp, args)
 end
 
 function onQuit(p)
-	if p == execPane then
-		execPane = nil
+	if p == qfixPane then
+		qfixPane = nil
 	end
 end
 
