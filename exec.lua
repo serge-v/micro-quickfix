@@ -56,17 +56,7 @@ function execMake(bp, args)
 	shell.JobSpawn("make", args, nil, nil, execExit, bp)
 end
 
-function execLine(bp, args)
-	local name = ""
-	local p = micro.CurPane()
-	if p ~= nil then
-		name = p:Name()
-	end
-	if name == "exec" then
-		micro.InfoBar():Error("use jump command to go to the file")
-		return
-	end
-
+function execCurrentLine(bp)
 	local c = bp.Cursor
 	local cmd = bp.Buf:Line(c.Y)
 	micro.Log("execline: "..cmd)
@@ -75,6 +65,43 @@ function execLine(bp, args)
 		return
 	end
 	shell.JobStart(cmd, nil, nil, execExit, bp)
+end
+
+function execArgs(bp, args)
+	local cmd = ""
+	cmd = strings.Join(args, " ")
+
+	if strings.Contains("{w}") then
+		local c = bp.Cursor
+		local sel = ""
+		if not c:HasSelection() then
+			c:SelectWord()
+		end
+		sel = c:GetSelection()
+		cmd = strings.Replace(cmd, "{w}", sel, 1)
+	end
+
+	micro.Log("execline: "..cmd)
+	shell.JobStart(cmd, nil, nil, execExit, bp)
+end
+
+function execLine(bp, args)
+	local name = ""
+	local p = micro.CurPane()
+	if p ~= nil then
+		name = p:Name()
+	end
+	if name == "exec" then
+		execPane:Quit()
+		execPane = nil
+		return
+	end
+
+	if #args > 0 then
+		execArgs(bp, args)
+	else
+		execCurrentLine(bp)
+	end
 end
 
 function jumpToFile(bp, args)
