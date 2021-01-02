@@ -9,7 +9,6 @@ local regexp = import("regexp")
 local os = import("os")
 
 function init()
-	config.MakeCommand("fmake", execMake, config.NoComplete)
 	config.MakeCommand("fexec", execLine, config.NoComplete)
 	config.MakeCommand("fjump", jumpToFile, config.NoComplete)
 	config.AddRuntimeFile("quickfix", config.RTHelp, "help/quickfix.md")
@@ -36,21 +35,6 @@ function execExit(output, args)
 	micro.InfoBar():Message("")
 end
 
-function execMake(bp, args)
-	local name = ""
-	local p = micro.CurPane()
-	if p ~= nil then
-		name = p:Name()
-	end
-	if name == "qfix" then
-		qfixPane:Quit()
-		qfixPane = nil
-		return
-	end
-
-	shell.JobSpawn("make", args, nil, nil, execExit, bp)
-end
-
 function execCurrentLine(bp)
 	local c = bp.Cursor
 	local cmd = bp.Buf:Line(c.Y)
@@ -66,13 +50,21 @@ function execArgs(bp, args)
 	local cmd = ""
 	cmd = strings.Join(args, " ")
 
+	if strings.Contains(cmd, "{s}") then
+		local c = bp.Cursor
+		if c:HasSelection() then
+			sel = c:GetSelection()
+			cmd = strings.Replace(cmd, "{s}", sel, 1)
+		end
+	end
+
 	if strings.Contains(cmd, "{w}") then
 		local c = bp.Cursor
 		local sel = ""
 		if not c:HasSelection() then
 			c:SelectWord()
 		end
-		sel = c:GetSelecion()
+		sel = c:GetSelection()
 		cmd = strings.Replace(cmd, "{w}", sel, 1)
 	end
 
