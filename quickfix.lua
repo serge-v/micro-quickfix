@@ -47,11 +47,11 @@ function execCurrentLine(bp)
 end
 
 function execArgs(bp, args)
+	local c = bp.Cursor
 	local cmd = ""
 	cmd = strings.Join(args, " ")
 
 	if strings.Contains(cmd, "{s}") then
-		local c = bp.Cursor
 		if c:HasSelection() then
 			sel = c:GetSelection()
 			cmd = strings.Replace(cmd, "{s}", sel, 1)
@@ -59,7 +59,6 @@ function execArgs(bp, args)
 	end
 
 	if strings.Contains(cmd, "{w}") then
-		local c = bp.Cursor
 		local sel = ""
 		if not c:HasSelection() then
 			c:SelectWord()
@@ -67,6 +66,12 @@ function execArgs(bp, args)
 		sel = c:GetSelection()
 		cmd = strings.Replace(cmd, "{w}", sel, 1)
 	end
+	
+	cmd = strings.Replace(cmd, "{f}", c:Buf().AbsPath, 1)
+
+	local loc = buffer.Loc(c.X, c.Y)
+	local offs = buffer.ByteOffset(loc, c:Buf())
+	cmd = strings.Replace(cmd, "{o}", tostring(offs), 1)
 
 	micro.Log("fexec: "..cmd)
 	shell.JobStart(cmd, nil, nil, execExit, bp)
