@@ -14,6 +14,13 @@ fexec [args]
     If args is not empty executes the arguments.
     Otherwise executes the current line.
 
+Placeholders:
+
+    {w} -- current word
+    {s} -- current selection
+    {o} -- byte offset
+    {f} -- current file
+
 fjump
 
     Jumps between qfix pane and file locations.

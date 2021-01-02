@@ -1,25 +1,43 @@
-# exec plugin for micro editor
+# Quickfix plugin for micro editor
 
-Provides run make and jump to the error functionality.
+Quickfix is a plugin to speedup edit-make-edit development cycle.
+It is similar to quickfix window in VIM editor.
+
+You can execute an external command, examine the output in qfix pane
+and toggle between list of positions and file locations.
 
 ## Commands
 
-### make
+### fexec [args]
 
-Executes make. Captures the output.
+If args list is empty fexec executes the current line.
+Otherwise fexec replaces argument placeholders and executes the arguments.
 
-### execline
+Placeholders:
 
-Executes current line. Captures the output.
+	{w} -- current word
+	{s} -- current selection
+	{o} -- byte offset
+	{f} -- current file
 
-### jump
+Binding examples:
 
-Jumps to the file under cursor. On the next execution jumps back to the output pane.
+Run make:
 
-## Example bindings.json
+	"F8": "command:fexec make"
 
-	{
-	    "F3": "command:jump",
-	    "F5": "command:execline",
-	    "F8": "command:make"
-	}
+Grep for word under cursor:
+
+	"F7": "command:fexec grep -n {w} *.go"
+
+Show go doc for selected pkgname.Entity:
+
+	"F8": "command:fexec go doc {s}"
+
+List all declarations in go file:
+
+	"Alt-t": "command:fexec motion -file {f} -mode decls -include func -format text",
+
+### fjump
+
+Jumps to the file under cursor and back.
