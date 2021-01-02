@@ -119,8 +119,20 @@ function jumpToFile(bp, args)
 	line = string.sub(line, c.X+1)
 	micro.Log("jump to "..line)
 
+	local arr = strings.Split(line, ":")
+	if #arr == 0 then
+		micro.InfoBar():Error("no filename at current pos")
+		return
+	end
+
+	local fi, err = os.Stat(arr[1])
+	if err ~= nil then
+		micro.InfoBar():Error("no filename at current pos")
+		return
+	end
+
 	rex = regexp.MustCompile("[^:]+:[0-9]+:[0-9]:")
-	fname = rex:FindString(line)
+	local fname = rex:FindString(line)
 	if fname == "" then
 		rex = regexp.MustCompile("[^:]+:[0-9]+:")
 		fname = rex:FindString(line)
