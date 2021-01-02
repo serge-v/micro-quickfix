@@ -5,10 +5,6 @@ qfix pane allows to jump to the file location.
 
 Commands:
 
-fmake [target]
-
-    Executes make command.
-
 fexec [args]
 
     If args is not empty executes the arguments.
@@ -30,10 +26,6 @@ fjump
 Jump to the file and back to qfix pane:
 
 	"F3": "command:fjump"
-
-Run make:
-
-	"F8": "command:fmake"
 
 Exec current line:
 
