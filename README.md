@@ -6,6 +6,15 @@ It is similar to quickfix window in VIM editor.
 You can execute an external command, examine the output in qfix pane
 and toggle between list of positions and file locations.
 
+Plugin added to the micro plugin channel:
+https://github.com/micro-editor/plugin-channel
+
+## Installation
+
+In micro editor press Ctrl+E and run command:
+
+	plugin install quickfix
+
 ## Commands
 
 ### fexec [args]
@@ -40,6 +49,6 @@ List all declarations in go file:
 
 ### fjump
 
-* Set parsecursor=true in config to enable jumping to the file location. *
+**Set parsecursor=true in config to enable jumping to the file location.**
 
 Jumps to the file under cursor and back.
