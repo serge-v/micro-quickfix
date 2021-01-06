@@ -40,4 +40,6 @@ List all declarations in go file:
 
 ### fjump
 
+* Set parsecursor=true in config to enable jumping to the file location. *
+
 Jumps to the file under cursor and back.
