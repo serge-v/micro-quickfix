@@ -108,10 +108,8 @@ function jumpToFile(bp, args)
 			tab:SetActive(1)
 			local tabs = micro.Tabs()
 			tabs:SetActive(active)
-		else
-			micro.InfoBar():Error("use fexec command to execute current line")
+			return
 		end
-		return
 	end
 
 	local c = bp.Cursor
