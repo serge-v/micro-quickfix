@@ -43,7 +43,12 @@ function execCurrentLine(bp)
 		micro.InfoBar():Error("current line is empty")
 		return
 	end
-	shell.JobStart(cmd, nil, nil, execExit, bp)
+	local s, err = shell.RunCommand(cmd)
+	if err ~= nil then
+		micro.InfoBar():Error("fexec error: "..err:Error())
+		return
+	end
+	execExit(s, nil)
 end
 
 function execArgs(bp, args)
@@ -74,7 +79,13 @@ function execArgs(bp, args)
 	cmd = strings.Replace(cmd, "{o}", tostring(offs), 1)
 
 	micro.Log("fexec: "..cmd)
-	shell.JobStart(cmd, nil, nil, execExit, bp)
+	micro.InfoBar():Message("running: "..cmd)
+	local s, err = shell.RunCommand(cmd)
+	if err ~= nil then
+		micro.InfoBar():Error("fexec error: "..err:Error())
+		return
+	end
+	execExit(s, nil)
 end
 
 function execLine(bp, args)
@@ -129,7 +140,7 @@ function jumpToFile(bp, args)
 		return
 	end
 
-	rex = regexp.MustCompile("[^:]+:[0-9]+:[0-9]:")
+	rex = regexp.MustCompile("[^:]+:[0-9]+:[0-9]+:")
 	local fname = rex:FindString(line)
 	if fname == "" then
 		rex = regexp.MustCompile("[^:]+:[0-9]+:")
