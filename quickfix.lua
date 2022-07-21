@@ -77,6 +77,8 @@ function execArgs(bp, args)
 	local loc = buffer.Loc(c.X, c.Y)
 	local offs = buffer.ByteOffset(loc, c:Buf())
 	cmd = strings.Replace(cmd, "{o}", tostring(offs), 1)
+	cmd = strings.Replace(cmd, "{l}", tostring(c.Y+1), 1)
+	cmd = strings.Replace(cmd, "{c}", tostring(c.X+1), 1)
 
 	micro.Log("fexec: "..cmd)
 	micro.InfoBar():Message("running: "..cmd)
