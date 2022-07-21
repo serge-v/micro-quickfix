@@ -16,6 +16,8 @@ Placeholders:
     {s} -- current selection
     {o} -- byte offset
     {f} -- current file
+    {l} -- current line
+    {c} -- current position
 
 fjump
 
