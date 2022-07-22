@@ -163,7 +163,27 @@ function jumpToFile(bp, args)
 		return
 	end
 
+	plainfname = strings.Split(fname, ":")[1]
+	micro.Log("plainfname", plainfname)
+
 	micro.InfoBar():Message(fname)
+
+    local tabs = micro.Tabs()
+    for i = 1,#tabs.List do
+        for j = 1,#tabs.List[i].Panes do
+            local name = tabs.List[i].Panes[j]:Name()
+            micro.Log("tab", i, "pane", i, "name", name)
+            if plainfname == name then
+                micro.Log("set active:", name)
+                tabs:SetActive(i-1)
+                tabs.List[i]:SetActive(j-1)
+                tabs.List[i].Panes[j]:SetActive(true)
+                tabs.List[i].Panes[j]:HandleCommand("open "..fname)
+                return
+            end
+        end
+    end
+
 	micro.Log("fname: "..fname)
 	bp:HandleCommand("tab "..fname)
 	bp:Center()
