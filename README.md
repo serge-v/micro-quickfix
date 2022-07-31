@@ -6,6 +6,9 @@ It is similar to quickfix window in VIM editor.
 You can execute an external command, examine the output in qfix pane
 and toggle between list of positions and file locations.
 
+qfix pane supports incremental search and jumps to the first match as you type.
+Use backtick to cancel the search.
+
 Plugin added to the micro plugin channel:
 https://github.com/micro-editor/plugin-channel
 

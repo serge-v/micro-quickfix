@@ -195,3 +195,34 @@ function onQuit(p)
 	end
 end
 
+local pattern = ""
+
+function onRune(bp, r)
+        micro.Log("rune: "..r)
+        if bp ~= qfixPane then
+                return
+        end
+
+        local s = tostring(r)
+        if s == "`" then
+                pattern = ""
+                micro.InfoBar():Message("")
+                return
+        end
+
+        pattern = pattern..s
+        micro.Log("pattern: "..pattern)
+        micro.InfoBar():Message("search (backtick to cancel): "..pattern)
+
+        local c = bp.Cursor
+        local bufstart = buffer.Loc(0, 0)
+        local bufend = buffer.Loc(0, 1000000)
+        local from = buffer.Loc(c.X, c.Y)
+        found, res, err = bp.Buf:FindNext(pattern, bufstart, bufend, from, true, false)
+        if not res then
+                return
+        end
+        local loc = buffer.Loc(0, found[1].Y)
+        c:GotoLoc(loc)
+        bp:Relocate()
+end
