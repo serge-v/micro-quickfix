@@ -3,6 +3,8 @@
 Executes external command and shows the command output in qfix pane.
 qfix pane allows to jump to the file location. 
 
+qfix pane has incremental search as you type. Use backtick to reset the search.
+
 Commands:
 
 fexec [args]
