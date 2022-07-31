@@ -31,8 +31,6 @@ function execExit(output, args)
 	tab = micro.CurTab()
 	local tabs = micro.Tabs()
 	active = tabs:Active()
-
-	micro.InfoBar():Message("")
 end
 
 function execCurrentLine(bp)
@@ -44,11 +42,12 @@ function execCurrentLine(bp)
 		return
 	end
 	local s, err = shell.RunCommand(cmd)
-	if err ~= nil then
-		micro.InfoBar():Error("fexec error: "..err:Error())
-		return
-	end
 	execExit(s, nil)
+	if err ~= nil then
+		micro.InfoBar():Error(err:Error())
+	else
+		micro.InfoBar():Message("")
+	end
 end
 
 function execArgs(bp, args)
@@ -83,11 +82,12 @@ function execArgs(bp, args)
 	micro.Log("fexec: "..cmd)
 	micro.InfoBar():Message("running: "..cmd)
 	local s, err = shell.RunCommand(cmd)
-	if err ~= nil then
-		micro.InfoBar():Error("fexec error: "..err:Error())
-		return
-	end
 	execExit(s, nil)
+	if err ~= nil then
+		micro.InfoBar():Error(err:Error())
+	else
+		micro.InfoBar():Message("")
+	end
 end
 
 function execLine(bp, args)
