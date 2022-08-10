@@ -6,6 +6,7 @@ local buffer = import("micro/buffer")
 local shell = import("micro/shell")
 local strings = import("strings")
 local regexp = import("regexp")
+local filepath = import("filepath")
 local os = import("os")
 
 function init()
@@ -163,8 +164,10 @@ function jumpToFile(bp, args)
 		return
 	end
 
-	plainfname = strings.Split(fname, ":")[1]
-	micro.Log("plainfname", plainfname)
+	local plainfname = strings.Split(fname, ":")[1]
+	local absfname = filepath.Abs(plainfname)
+
+	micro.Log("plainfname:", plainfname, "absfname:", absfname)
 
 	micro.InfoBar():Message(fname)
 
@@ -172,20 +175,21 @@ function jumpToFile(bp, args)
     for i = 1,#tabs.List do
         for j = 1,#tabs.List[i].Panes do
             local name = tabs.List[i].Panes[j]:Name()
-            micro.Log("tab", i, "pane", i, "name", name)
-            if plainfname == name then
+            local absname = tabs.List[i].Panes[j].Buf.AbsPath
+            micro.Log("tab", i, "pane", i, "absname", absname)
+            if absfname == absname then
                 micro.Log("set active:", name)
                 tabs:SetActive(i-1)
                 tabs.List[i]:SetActive(j-1)
                 tabs.List[i].Panes[j]:SetActive(true)
-                tabs.List[i].Panes[j]:HandleCommand("open "..fname)
+                tabs.List[i].Panes[j]:HandleCommand("open "..absfname)
                 return
             end
         end
     end
 
-	micro.Log("fname: "..fname)
-	bp:HandleCommand("tab "..fname)
+	micro.Log("fname: "..absfname)
+	bp:HandleCommand("tab "..absfname)
 	bp:Center()
 end
 
