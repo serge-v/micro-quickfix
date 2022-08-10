@@ -5,8 +5,8 @@
   "Website": "https://github.com/serge-v/micro-quickfix",
   "Versions": [
     {
-      "Version": "2.1.1",
-      "Url": "https://github.com/serge-v/micro-quickfix/archive/v2.1.1.zip",
+      "Version": "2.1.2",
+      "Url": "https://github.com/serge-v/micro-quickfix/archive/v2.1.2.zip",
       "Require": {
         "micro": ">=2.0.0"
       }
