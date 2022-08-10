@@ -167,7 +167,9 @@ function jumpToFile(bp, args)
 	local plainfname = strings.Split(fname, ":")[1]
 	local absfname = filepath.Abs(plainfname)
 
-	micro.Log("plainfname:", plainfname, "absfname:", absfname)
+	local absfnameWithPos = absfname..strings.TrimPrefix(fname, plainfname)
+
+	micro.Log("plainfname:", plainfname, "absfnameWithPos:", absfnameWithPos)
 
 	micro.InfoBar():Message(fname)
 
@@ -182,14 +184,14 @@ function jumpToFile(bp, args)
                 tabs:SetActive(i-1)
                 tabs.List[i]:SetActive(j-1)
                 tabs.List[i].Panes[j]:SetActive(true)
-                tabs.List[i].Panes[j]:HandleCommand("open "..absfname)
+                tabs.List[i].Panes[j]:HandleCommand("open "..absfnameWithPos)
                 return
             end
         end
     end
 
-	micro.Log("fname: "..absfname)
-	bp:HandleCommand("tab "..absfname)
+	micro.Log("fname: "..absfnameWithPos)
+	bp:HandleCommand("tab "..absfnameWithPos)
 	bp:Center()
 end
 
