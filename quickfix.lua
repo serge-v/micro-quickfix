@@ -202,7 +202,6 @@ end
 local pattern = ""
 
 function onRune(bp, r)
-        micro.Log("rune: "..r)
         if bp ~= qfixPane then
                 return
         end
